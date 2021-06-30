@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `iota-client/src/api/message_builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>message_builder.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../iota_client/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../iota_client/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -805,29 +805,90 @@
 <span id="802">802</span>
 <span id="803">803</span>
 <span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2021 IOTA Stiftung</span>
 <span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">api</span>::<span class="ident">address</span>::<span class="ident">search_address</span>, <span class="ident">Client</span>, <span class="ident">ClientMiner</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">api::address::search_address</span>, <span class="ident">Client</span>, <span class="ident">ClientMiner</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
 
-<span class="kw">use</span> <span class="ident">bee_common</span>::<span class="ident">packable</span>::<span class="ident">Packable</span>;
-<span class="kw">use</span> <span class="ident">bee_message</span>::{<span class="ident">constants</span>::<span class="ident">INPUT_OUTPUT_COUNT_MAX</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+<span class="kw">use</span> <span class="ident">bee_common::packable::Packable</span>;
+<span class="kw">use</span> <span class="ident">bee_message</span>::{<span class="ident">constants::INPUT_OUTPUT_COUNT_MAX</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">bee_pow</span>::<span class="ident">providers</span>::{<span class="ident">miner</span>::<span class="ident">MinerCancel</span>, <span class="ident">NonceProviderBuilder</span>};
-<span class="kw">use</span> <span class="ident">bee_rest_api</span>::<span class="ident">types</span>::{
+<span class="kw">use</span> <span class="ident">bee_pow::providers</span>::{<span class="ident">miner::MinerCancel</span>, <span class="ident">NonceProviderBuilder</span>};
+<span class="kw">use</span> <span class="ident">bee_rest_api::types</span>::{
     <span class="ident">dtos</span>::{<span class="ident">AddressDto</span>, <span class="ident">OutputDto</span>},
-    <span class="ident">responses</span>::<span class="ident">OutputResponse</span>,
+    <span class="ident">responses::OutputResponse</span>,
 };
-<span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">keys</span>::<span class="ident">slip10</span>::{<span class="ident">Chain</span>, <span class="ident">Curve</span>, <span class="ident">Seed</span>};
+<span class="kw">use</span> <span class="ident">crypto::keys::slip10</span>::{<span class="ident">Chain</span>, <span class="ident">Curve</span>, <span class="ident">Seed</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">time</span>::<span class="ident">sleep</span>;
+<span class="kw">use</span> <span class="ident">tokio::time::sleep</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
-    <span class="ident">ops</span>::<span class="ident">Range</span>,
-    <span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="ident">time</span>::<span class="ident">Duration</span>,
+    <span class="ident">ops::Range</span>,
+    <span class="ident">str::FromStr</span>,
+    <span class="ident">time::Duration</span>,
 };
 
 <span class="comment">// https://github.com/GalRogozinski/protocol-rfcs/blob/dust/text/0032-dust-protection/0032-dust-protection.md</span>
@@ -835,12 +896,25 @@
 <span class="kw">const</span> <span class="ident">DUST_DIVISOR</span>: <span class="ident">i64</span> <span class="op">=</span> <span class="number">100_000</span>;
 <span class="kw">const</span> <span class="ident">DUST_THRESHOLD</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1_000_000</span>;
 
+<span class="doccomment">/// Helper struct for offline signing</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PreparedTransactionData</span> {
+    <span class="doccomment">/// Transaction essence</span>
+    <span class="kw">pub</span> <span class="ident">essence</span>: <span class="ident">Essence</span>,
+    <span class="doccomment">/// Required address information for signing</span>
+    <span class="kw">pub</span> <span class="ident">address_index_recorders</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AddressIndexRecorder</span><span class="op">&gt;</span>,
+}
+
 <span class="doccomment">/// Structure for sorting of UnlockBlocks</span>
-<span class="kw">struct</span> <span class="ident">AddressIndexRecorder</span> {
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AddressIndexRecorder</span> {
+    <span class="ident">account_index</span>: <span class="ident">usize</span>,
     <span class="ident">input</span>: <span class="ident">Input</span>,
+    <span class="ident">output</span>: <span class="ident">OutputResponse</span>,
     <span class="ident">address_index</span>: <span class="ident">usize</span>,
     <span class="ident">chain</span>: <span class="ident">Chain</span>,
     <span class="ident">internal</span>: <span class="ident">bool</span>,
+    <span class="ident">bech32_address</span>: <span class="ident">String</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
@@ -876,7 +950,7 @@
             <span class="ident">initial_address_index</span>: <span class="prelude-val">None</span>,
             <span class="ident">inputs</span>: <span class="prelude-val">None</span>,
             <span class="ident">input_range</span>: <span class="number">0</span>..<span class="number">100</span>,
-            <span class="ident">outputs</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">outputs</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">index</span>: <span class="prelude-val">None</span>,
             <span class="ident">data</span>: <span class="prelude-val">None</span>,
             <span class="ident">parents</span>: <span class="prelude-val">None</span>,
@@ -908,7 +982,7 @@
                 <span class="ident">inputs</span>.<span class="ident">push</span>(<span class="ident">input</span>);
                 <span class="prelude-val">Some</span>(<span class="ident">inputs</span>)
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">input</span>]),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">input</span>]),
         };
         <span class="self">self</span>
     }
@@ -921,7 +995,7 @@
 
     <span class="doccomment">/// Set a transfer to the builder</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_output</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">amount</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedSingleOutput</span>::<span class="ident">new</span>(<span class="ident">Address</span>::<span class="ident">from_str</span>(<span class="ident">address</span>)<span class="question-mark">?</span>, <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedSingleOutput::new</span>(<span class="ident">Address::from_str</span>(<span class="ident">address</span>)<span class="question-mark">?</span>, <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
         <span class="self">self</span>.<span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">output</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
@@ -929,18 +1003,18 @@
     <span class="doccomment">/// Set a dust allowance transfer to the builder, address needs to be Bech32 encoded</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_dust_allowance_output</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">amount</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">amount</span> <span class="op">&lt;</span> <span class="ident">DUST_THRESHOLD</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DustError</span>(
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DustError</span>(
                 <span class="string">&quot;Amount for SignatureLockedDustAllowanceOutput needs to be &gt;= 1_000_000&quot;</span>.<span class="ident">into</span>(),
             ));
         }
-        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedDustAllowanceOutput</span>::<span class="ident">new</span>(<span class="ident">Address</span>::<span class="ident">from_str</span>(<span class="ident">address</span>)<span class="question-mark">?</span>, <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedDustAllowanceOutput::new</span>(<span class="ident">Address::from_str</span>(<span class="ident">address</span>)<span class="question-mark">?</span>, <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
         <span class="self">self</span>.<span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">output</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Set a transfer to the builder, address needs to be hex encoded</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_output_hex</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">address</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">amount</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedSingleOutput</span>::<span class="ident">new</span>(<span class="ident">address</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Ed25519Address</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">into</span>(), <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">SignatureLockedSingleOutput::new</span>(<span class="ident">address</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Ed25519Address</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">into</span>(), <span class="ident">amount</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
         <span class="self">self</span>.<span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">output</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
@@ -960,7 +1034,7 @@
     <span class="doccomment">/// Set 1-8 custom parent message ids</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_parents</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parent_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span>(<span class="number">1</span>..<span class="op">=</span><span class="number">8</span>).<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">parent_ids</span>.<span class="ident">len</span>()) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">InvalidParentsAmount</span>(<span class="ident">parent_ids</span>.<span class="ident">len</span>()));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::InvalidParentsAmount</span>(<span class="ident">parent_ids</span>.<span class="ident">len</span>()));
         }
         <span class="self">self</span>.<span class="ident">parents</span>.<span class="ident">replace</span>(<span class="ident">parent_ids</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
@@ -970,17 +1044,19 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="comment">// Indexation payload requires an indexation tag</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">index</span>.<span class="ident">is_none</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;index&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::MissingParameter</span>(<span class="string">&quot;index&quot;</span>));
         }
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inputs</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">outputs</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;output&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::MissingParameter</span>(<span class="string">&quot;output&quot;</span>));
         }
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">outputs</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">seed</span>.<span class="ident">is_none</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;Seed&quot;</span>));
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">seed</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">inputs</span>.<span class="ident">is_none</span>() {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::MissingParameter</span>(<span class="string">&quot;Seed&quot;</span>));
             }
             <span class="comment">// Send message with transaction</span>
-            <span class="self">self</span>.<span class="ident">finish_transaction</span>().<span class="kw">await</span>
+            <span class="kw">let</span> <span class="ident">prepared_transaction_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">prepare_transaction</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">tx_payload</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sign_transaction</span>(<span class="ident">prepared_transaction_data</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">finish_message</span>(<span class="prelude-val">Some</span>(<span class="ident">tx_payload</span>)).<span class="kw">await</span>
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span>.<span class="ident">is_some</span>() {
             <span class="comment">// Send message with indexation payload</span>
             <span class="self">self</span>.<span class="ident">finish_indexation</span>().<span class="kw">await</span>
@@ -996,43 +1072,49 @@
         <span class="ident">address_index</span>: <span class="ident">usize</span>,
         <span class="ident">internal</span>: <span class="ident">bool</span>,
         <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident">OutputResponse</span>,
+        <span class="ident">bech32_address</span>: <span class="ident">String</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AddressIndexRecorder</span><span class="op">&gt;</span> {
         <span class="comment">// Note that we need to sign the original address, i.e., `path/index`,</span>
         <span class="comment">// instead of `path/index/_offset` or `path/_offset`.</span>
 
         <span class="comment">// 44 is for BIP 44 (HD wallets) and 4218 is the registered index for IOTA https://github.com/satoshilabs/slips/blob/master/slip-0044.md</span>
-        <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">Chain</span>::<span class="ident">from_u32_hardened</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">Chain::from_u32_hardened</span>(<span class="macro">vec!</span>[
             <span class="number">44</span>,
             <span class="number">4218</span>,
             <span class="ident">account_index</span> <span class="kw">as</span> <span class="ident">u32</span>,
             <span class="ident">internal</span> <span class="kw">as</span> <span class="ident">u32</span>,
             <span class="ident">address_index</span> <span class="kw">as</span> <span class="ident">u32</span>,
         ]);
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">Input</span>::<span class="ident">Utxo</span>(
-            <span class="ident">UtxoInput</span>::<span class="ident">new</span>(<span class="ident">TransactionId</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">transaction_id</span>)<span class="question-mark">?</span>, <span class="ident">output</span>.<span class="ident">output_index</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">TransactionError</span>)<span class="question-mark">?</span>,
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">Input::Utxo</span>(
+            <span class="ident">UtxoInput::new</span>(<span class="ident">TransactionId::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">transaction_id</span>)<span class="question-mark">?</span>, <span class="ident">output</span>.<span class="ident">output_index</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::TransactionError</span>)<span class="question-mark">?</span>,
         );
 
         <span class="prelude-val">Ok</span>(<span class="ident">AddressIndexRecorder</span> {
+            <span class="ident">account_index</span>,
             <span class="ident">input</span>,
+            <span class="ident">output</span>: <span class="ident">output</span>.<span class="ident">clone</span>(),
             <span class="ident">address_index</span>,
             <span class="ident">chain</span>,
             <span class="ident">internal</span>,
+            <span class="ident">bech32_address</span>,
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_output_amount_and_address</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident">OutputDto</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">Address</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+    <span class="doccomment">/// Get output amount and address from an OutputDto (bool true == SignatureLockedSingle, false ==</span>
+    <span class="doccomment">/// SignatureLockedDustAllowance)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_output_amount_and_address</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident">OutputDto</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">Address</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">output</span> {
-            <span class="ident">OutputDto</span>::<span class="ident">Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">OutputError</span>(<span class="string">&quot;Treasury output is no supported&quot;</span>)),
-            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedSingle</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">address</span> {
-                <span class="ident">AddressDto</span>::<span class="ident">Ed25519</span>(<span class="ident">addr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">output_address</span> <span class="op">=</span> <span class="ident">Address</span>::<span class="ident">from</span>(<span class="ident">Ed25519Address</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>.<span class="ident">address</span>)<span class="question-mark">?</span>);
+            <span class="ident">OutputDto::Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::OutputError</span>(<span class="string">&quot;Treasury output is no supported&quot;</span>)),
+            <span class="ident">OutputDto::SignatureLockedSingle</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">address</span> {
+                <span class="ident">AddressDto::Ed25519</span>(<span class="ident">addr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">output_address</span> <span class="op">=</span> <span class="ident">Address::from</span>(<span class="ident">Ed25519Address::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>.<span class="ident">address</span>)<span class="question-mark">?</span>);
                     <span class="prelude-val">Ok</span>((<span class="ident">r</span>.<span class="ident">amount</span>, <span class="ident">output_address</span>, <span class="bool-val">true</span>))
                 }
             },
-            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedDustAllowance</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">address</span> {
-                <span class="ident">AddressDto</span>::<span class="ident">Ed25519</span>(<span class="ident">addr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">output_address</span> <span class="op">=</span> <span class="ident">Address</span>::<span class="ident">from</span>(<span class="ident">Ed25519Address</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>.<span class="ident">address</span>)<span class="question-mark">?</span>);
+            <span class="ident">OutputDto::SignatureLockedDustAllowance</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">address</span> {
+                <span class="ident">AddressDto::Ed25519</span>(<span class="ident">addr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">output_address</span> <span class="op">=</span> <span class="ident">Address::from</span>(<span class="ident">Ed25519Address::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>.<span class="ident">address</span>)<span class="question-mark">?</span>);
                     <span class="prelude-val">Ok</span>((<span class="ident">r</span>.<span class="ident">amount</span>, <span class="ident">output_address</span>, <span class="bool-val">false</span>))
                 }
             },
@@ -1046,9 +1128,9 @@
         <span class="ident">total_to_spend</span>: <span class="ident">u64</span>,
         <span class="ident">dust_and_allowance_recorders</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">Address</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Input</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Output</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AddressIndexRecorder</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remainder_address_balance</span>: (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Address</span><span class="op">&gt;</span>, <span class="ident">u64</span>) <span class="op">=</span> (<span class="prelude-val">None</span>, <span class="number">0</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_already_spent</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">account_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">account_index</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
@@ -1057,27 +1139,33 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">output</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_output</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="kw">await</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">output</span>.<span class="ident">is_spent</span> {
                     <span class="kw">let</span> (<span class="ident">output_amount</span>, <span class="ident">output_address</span>, <span class="ident">check_treshold</span>) <span class="op">=</span>
-                        <span class="ident">ClientMessageBuilder</span>::<span class="ident">get_output_amount_and_address</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">output</span>)<span class="question-mark">?</span>;
+                        <span class="ident">ClientMessageBuilder::get_output_amount_and_address</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">output</span>)<span class="question-mark">?</span>;
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">check_treshold</span> <span class="op">|</span><span class="op">|</span> <span class="ident">output_amount</span> <span class="op">&lt;</span> <span class="ident">DUST_THRESHOLD</span> {
                         <span class="ident">dust_and_allowance_recorders</span>.<span class="ident">push</span>((<span class="ident">output_amount</span>, <span class="ident">output_address</span>, <span class="bool-val">false</span>));
                     }
 
                     <span class="ident">total_already_spent</span> <span class="op">+</span><span class="op">=</span> <span class="ident">output_amount</span>;
                     <span class="kw">let</span> <span class="ident">bech32_hrp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_bech32_hrp</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="kw">let</span> (<span class="ident">address_index</span>, <span class="ident">internal</span>) <span class="op">=</span> <span class="ident">search_address</span>(
-                        <span class="self">self</span>.<span class="ident">seed</span>.<span class="ident">ok_or</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;seed&quot;</span>))<span class="question-mark">?</span>,
-                        <span class="ident">bech32_hrp</span>,
-                        <span class="ident">account_index</span>,
-                        <span class="self">self</span>.<span class="ident">input_range</span>.<span class="ident">clone</span>(),
-                        <span class="kw-2">&amp;</span><span class="ident">output_address</span>,
-                    )
-                    .<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="kw">let</span> (<span class="ident">address_index</span>, <span class="ident">internal</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">seed</span> {
+                        <span class="prelude-val">Some</span>(<span class="ident">seed</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">search_address</span>(
+                                <span class="ident">seed</span>,
+                                <span class="kw-2">&amp;</span><span class="ident">bech32_hrp</span>,
+                                <span class="ident">account_index</span>,
+                                <span class="self">self</span>.<span class="ident">input_range</span>.<span class="ident">clone</span>(),
+                                <span class="kw-2">&amp;</span><span class="ident">output_address</span>,
+                            )
+                            .<span class="kw">await</span><span class="question-mark">?</span>
+                        }
+                        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="number">0</span>, <span class="bool-val">false</span>),
+                    };
 
-                    <span class="kw">let</span> <span class="ident">address_index_record</span> <span class="op">=</span> <span class="ident">ClientMessageBuilder</span>::<span class="ident">create_address_index_recorder</span>(
+                    <span class="kw">let</span> <span class="ident">address_index_record</span> <span class="op">=</span> <span class="ident">ClientMessageBuilder::create_address_index_recorder</span>(
                         <span class="ident">account_index</span>,
                         <span class="ident">address_index</span>,
                         <span class="ident">internal</span>,
                         <span class="kw-2">&amp;</span><span class="ident">output</span>,
+                        <span class="ident">output_address</span>.<span class="ident">to_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">bech32_hrp</span>),
                     )<span class="question-mark">?</span>;
                     <span class="ident">inputs_for_essence</span>.<span class="ident">push</span>(<span class="ident">address_index_record</span>.<span class="ident">input</span>.<span class="ident">clone</span>());
                     <span class="ident">address_index_recorders</span>.<span class="ident">push</span>(<span class="ident">address_index_record</span>);
@@ -1097,11 +1185,11 @@
             <span class="kw">if</span> <span class="ident">remainder_address_balance</span>.<span class="number">1</span> <span class="op">&lt;</span> <span class="ident">DUST_THRESHOLD</span> {
                 <span class="ident">dust_and_allowance_recorders</span>.<span class="ident">push</span>((<span class="ident">remainder_address_balance</span>.<span class="number">1</span>, <span class="ident">address</span>, <span class="bool-val">true</span>));
             }
-            <span class="ident">outputs_for_essence</span>.<span class="ident">push</span>(<span class="ident">SignatureLockedSingleOutput</span>::<span class="ident">new</span>(<span class="ident">address</span>, <span class="ident">remainder_address_balance</span>.<span class="number">1</span>)<span class="question-mark">?</span>.<span class="ident">into</span>());
+            <span class="ident">outputs_for_essence</span>.<span class="ident">push</span>(<span class="ident">SignatureLockedSingleOutput::new</span>(<span class="ident">address</span>, <span class="ident">remainder_address_balance</span>.<span class="number">1</span>)<span class="question-mark">?</span>.<span class="ident">into</span>());
         }
 
         <span class="kw">if</span> <span class="ident">total_already_spent</span> <span class="op">&lt;</span> <span class="ident">total_to_spend</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NotEnoughBalance</span>(<span class="ident">total_already_spent</span>, <span class="ident">total_to_spend</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::NotEnoughBalance</span>(<span class="ident">total_already_spent</span>, <span class="ident">total_to_spend</span>));
         }
 
         <span class="prelude-val">Ok</span>((<span class="ident">inputs_for_essence</span>, <span class="ident">outputs_for_essence</span>, <span class="ident">address_index_recorders</span>))
@@ -1113,11 +1201,11 @@
         <span class="ident">total_to_spend</span>: <span class="ident">u64</span>,
         <span class="ident">_dust_and_allowance_recorders</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">Address</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Input</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Output</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AddressIndexRecorder</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dust_allowance_outputs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dust_allowance_outputs</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_already_spent</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">account_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">account_index</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gap_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">initial_address_index</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
@@ -1126,9 +1214,9 @@
             <span class="comment">// Get the addresses in the BIP path/index ~ path/index+20</span>
             <span class="kw">let</span> <span class="ident">addresses</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">client</span>
-                .<span class="ident">get_addresses</span>(<span class="self">self</span>.<span class="ident">seed</span>.<span class="ident">ok_or</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;seed&quot;</span>))<span class="question-mark">?</span>)
+                .<span class="ident">get_addresses</span>(<span class="self">self</span>.<span class="ident">seed</span>.<span class="ident">ok_or</span>(<span class="kw">crate</span><span class="ident">::Error::MissingParameter</span>(<span class="string">&quot;seed&quot;</span>))<span class="question-mark">?</span>)
                 .<span class="ident">with_account_index</span>(<span class="ident">account_index</span>)
-                .<span class="ident">with_range</span>(<span class="ident">gap_index</span>..<span class="ident">gap_index</span> <span class="op">+</span> <span class="kw">super</span>::<span class="ident">ADDRESS_GAP_RANGE</span>)
+                .<span class="ident">with_range</span>(<span class="ident">gap_index</span>..<span class="ident">gap_index</span> <span class="op">+</span> <span class="kw">super</span><span class="ident">::ADDRESS_GAP_RANGE</span>)
                 .<span class="ident">get_all</span>()
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="comment">// For each address, get the address outputs</span>
@@ -1137,7 +1225,7 @@
                 <span class="kw">let</span> <span class="ident">address_outputs</span> <span class="op">=</span> <span class="self">self</span>
                     .<span class="ident">client</span>
                     .<span class="ident">get_address</span>()
-                    .<span class="ident">outputs</span>(<span class="kw-2">&amp;</span><span class="ident">str_address</span>, <span class="ident">Default</span>::<span class="ident">default</span>())
+                    .<span class="ident">outputs</span>(<span class="kw-2">&amp;</span><span class="ident">str_address</span>, <span class="ident">Default::default</span>())
                     .<span class="kw">await</span><span class="question-mark">?</span>;
 
                 <span class="comment">// We store output responses locally in outputs and dust_allowance_outputs and after each output we sort</span>
@@ -1146,7 +1234,7 @@
                 <span class="kw">for</span> (<span class="ident">output_index</span>, <span class="ident">output_id</span>) <span class="kw">in</span> <span class="ident">address_outputs</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                     <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_output</span>(<span class="ident">output_id</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">output</span>.<span class="ident">is_spent</span> {
-                        <span class="kw">let</span> (<span class="ident">amount</span>, <span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ClientMessageBuilder</span>::<span class="ident">get_output_amount_and_address</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">output</span>)<span class="question-mark">?</span>;
+                        <span class="kw">let</span> (<span class="ident">amount</span>, <span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ClientMessageBuilder::get_output_amount_and_address</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">output</span>)<span class="question-mark">?</span>;
 
                         <span class="kw">let</span> <span class="ident">output_wrapper</span> <span class="op">=</span> <span class="ident">OutputWrapper</span> {
                             <span class="ident">output</span>,
@@ -1156,9 +1244,9 @@
                             <span class="ident">address</span>: <span class="ident">str_address</span>.<span class="ident">clone</span>(),
                         };
                         <span class="kw">match</span> <span class="ident">output_wrapper</span>.<span class="ident">output</span>.<span class="ident">output</span> {
-                            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedSingle</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">output_wrapper</span>),
-                            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedDustAllowance</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dust_allowance_outputs</span>.<span class="ident">push</span>(<span class="ident">output_wrapper</span>),
-                            <span class="ident">OutputDto</span>::<span class="ident">Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
+                            <span class="ident">OutputDto::SignatureLockedSingle</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">output_wrapper</span>),
+                            <span class="ident">OutputDto::SignatureLockedDustAllowance</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dust_allowance_outputs</span>.<span class="ident">push</span>(<span class="ident">output_wrapper</span>),
+                            <span class="ident">OutputDto::Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
                         };
 
                         <span class="comment">// Order outputs descending, so that as few inputs as necessary are used</span>
@@ -1182,11 +1270,12 @@
                             .<span class="ident">enumerate</span>()
                         {
                             <span class="ident">total_already_spent</span> <span class="op">+</span><span class="op">=</span> <span class="ident">output_wrapper</span>.<span class="ident">amount</span>;
-                            <span class="kw">let</span> <span class="ident">address_index_record</span> <span class="op">=</span> <span class="ident">ClientMessageBuilder</span>::<span class="ident">create_address_index_recorder</span>(
+                            <span class="kw">let</span> <span class="ident">address_index_record</span> <span class="op">=</span> <span class="ident">ClientMessageBuilder::create_address_index_recorder</span>(
                                 <span class="ident">account_index</span>,
                                 <span class="ident">output_wrapper</span>.<span class="ident">address_index</span>,
                                 <span class="ident">output_wrapper</span>.<span class="ident">internal</span>,
                                 <span class="kw-2">&amp;</span><span class="ident">output_wrapper</span>.<span class="ident">output</span>,
+                                <span class="ident">str_address</span>.<span class="ident">to_owned</span>(),
                             )<span class="question-mark">?</span>;
                             <span class="ident">inputs_for_essence</span>.<span class="ident">push</span>(<span class="ident">address_index_record</span>.<span class="ident">input</span>.<span class="ident">clone</span>());
                             <span class="ident">address_index_recorders</span>.<span class="ident">push</span>(<span class="ident">address_index_record</span>);
@@ -1198,8 +1287,8 @@
                                 <span class="comment">// Output possible remaining tokens back to the original address</span>
                                 <span class="kw">if</span> <span class="ident">remaining_balance</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                                     <span class="ident">outputs_for_essence</span>.<span class="ident">push</span>(
-                                        <span class="ident">SignatureLockedSingleOutput</span>::<span class="ident">new</span>(
-                                            <span class="ident">Address</span>::<span class="ident">try_from_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">output_wrapper</span>.<span class="ident">address</span>)<span class="question-mark">?</span>,
+                                        <span class="ident">SignatureLockedSingleOutput::new</span>(
+                                            <span class="ident">Address::try_from_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">output_wrapper</span>.<span class="ident">address</span>)<span class="question-mark">?</span>,
                                             <span class="ident">remaining_balance</span>,
                                         )<span class="question-mark">?</span>
                                         .<span class="ident">into</span>(),
@@ -1237,23 +1326,23 @@
                     <span class="ident">address_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
             }
-            <span class="ident">gap_index</span> <span class="op">+</span><span class="op">=</span> <span class="kw">super</span>::<span class="ident">ADDRESS_GAP_RANGE</span>;
+            <span class="ident">gap_index</span> <span class="op">+</span><span class="op">=</span> <span class="kw">super</span><span class="ident">::ADDRESS_GAP_RANGE</span>;
             <span class="comment">// The gap limit is 20 and use reference 40 here because there&#39;s public and internal addresses</span>
-            <span class="kw">if</span> <span class="ident">empty_address_count</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="kw">super</span>::<span class="ident">ADDRESS_GAP_RANGE</span> <span class="op">*</span> <span class="number">2</span>) <span class="kw">as</span> <span class="ident">u64</span> {
+            <span class="kw">if</span> <span class="ident">empty_address_count</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="kw">super</span><span class="ident">::ADDRESS_GAP_RANGE</span> <span class="op">*</span> <span class="number">2</span>) <span class="kw">as</span> <span class="ident">u64</span> {
                 <span class="kw">let</span> <span class="ident">inputs_balance</span> <span class="op">=</span> <span class="ident">outputs</span>
                     .<span class="ident">iter</span>()
                     .<span class="ident">chain</span>(<span class="ident">dust_allowance_outputs</span>.<span class="ident">iter</span>())
                     .<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="ident">output</span><span class="op">|</span> <span class="ident">acc</span> <span class="op">+</span> <span class="ident">output</span>.<span class="ident">amount</span>);
                 <span class="kw">let</span> <span class="ident">inputs_amount</span> <span class="op">=</span> <span class="ident">outputs</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">dust_allowance_outputs</span>.<span class="ident">len</span>();
                 <span class="kw">if</span> <span class="ident">inputs_balance</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">total_to_spend</span> <span class="op">&amp;&amp;</span> <span class="ident">inputs_amount</span> <span class="op">&gt;</span> <span class="ident">INPUT_OUTPUT_COUNT_MAX</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ConsolidationRequired</span>(<span class="ident">inputs_amount</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::ConsolidationRequired</span>(<span class="ident">inputs_amount</span>));
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">inputs_balance</span> <span class="op">&gt;</span> <span class="ident">total_to_spend</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DustError</span>(<span class="macro">format</span><span class="macro">!</span>(
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DustError</span>(<span class="macro">format!</span>(
                         <span class="string">&quot;Transaction would create a dust output with {}i&quot;</span>,
                         <span class="ident">inputs_balance</span> <span class="op">-</span> <span class="ident">total_to_spend</span>
                     )));
                 } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NotEnoughBalance</span>(<span class="ident">inputs_balance</span>, <span class="ident">total_to_spend</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::NotEnoughBalance</span>(<span class="ident">inputs_balance</span>, <span class="ident">total_to_spend</span>));
                 }
             }
         }
@@ -1261,22 +1350,22 @@
         <span class="prelude-val">Ok</span>((<span class="ident">inputs_for_essence</span>, <span class="ident">outputs_for_essence</span>, <span class="ident">address_index_recorders</span>))
     }
 
-    <span class="doccomment">/// Consume the builder and get the API result</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finish_transaction</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Prepare a transaction</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">prepare_transaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PreparedTransactionData</span><span class="op">&gt;</span> {
         <span class="comment">// store (amount, address, new_created) to check later if dust is allowed</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dust_and_allowance_recorders</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dust_and_allowance_recorders</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
         <span class="comment">// Calculate the total tokens to spend</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_to_spend</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> <span class="ident">output</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">outputs</span> {
             <span class="kw">match</span> <span class="ident">output</span> {
-                <span class="ident">Output</span>::<span class="ident">SignatureLockedSingle</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Output::SignatureLockedSingle</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">total_to_spend</span> <span class="op">+</span><span class="op">=</span> <span class="ident">x</span>.<span class="ident">amount</span>();
                     <span class="kw">if</span> <span class="ident">x</span>.<span class="ident">amount</span>() <span class="op">&lt;</span> <span class="ident">DUST_THRESHOLD</span> {
                         <span class="ident">dust_and_allowance_recorders</span>.<span class="ident">push</span>((<span class="ident">x</span>.<span class="ident">amount</span>(), <span class="kw-2">*</span><span class="ident">x</span>.<span class="ident">address</span>(), <span class="bool-val">true</span>));
                     }
                 }
-                <span class="ident">Output</span>::<span class="ident">SignatureLockedDustAllowance</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Output::SignatureLockedDustAllowance</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">total_to_spend</span> <span class="op">+</span><span class="op">=</span> <span class="ident">x</span>.<span class="ident">amount</span>();
                     <span class="ident">dust_and_allowance_recorders</span>.<span class="ident">push</span>((<span class="ident">x</span>.<span class="ident">amount</span>(), <span class="kw-2">*</span><span class="ident">x</span>.<span class="ident">address</span>(), <span class="bool-val">true</span>));
                 }
@@ -1285,11 +1374,11 @@
         }
 
         <span class="comment">// Inputselection</span>
-        <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span>, <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span>, <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inputs</span> {
+        <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">inputs_for_essence</span>, <span class="kw-2">mut</span> <span class="ident">outputs_for_essence</span>, <span class="ident">address_index_recorders</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inputs</span> {
             <span class="prelude-val">Some</span>(<span class="ident">inputs</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// 127 is the maximum input amount</span>
                 <span class="kw">if</span> <span class="ident">inputs</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">INPUT_OUTPUT_COUNT_MAX</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ConsolidationRequired</span>(<span class="ident">inputs</span>.<span class="ident">len</span>()));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::ConsolidationRequired</span>(<span class="ident">inputs</span>.<span class="ident">len</span>()));
                 }
                 <span class="self">self</span>.<span class="ident">get_custom_inputs</span>(<span class="ident">inputs</span>, <span class="ident">total_to_spend</span>, <span class="ident">dust_and_allowance_recorders</span>.<span class="ident">as_mut</span>())
                     .<span class="kw">await</span><span class="question-mark">?</span>
@@ -1301,7 +1390,7 @@
         };
 
         <span class="comment">// Check if we would let dust on an address behind or send new dust, which would make the tx unconfirmable</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">single_addresses</span> <span class="op">=</span> <span class="ident">HashSet</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">single_addresses</span> <span class="op">=</span> <span class="ident">HashSet::new</span>();
         <span class="kw">for</span> <span class="ident">dust_or_allowance</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">dust_and_allowance_recorders</span> {
             <span class="ident">single_addresses</span>.<span class="ident">insert</span>(<span class="ident">dust_or_allowance</span>.<span class="number">1</span>);
         }
@@ -1319,7 +1408,7 @@
             <span class="ident">outputs_for_essence</span>.<span class="ident">push</span>(<span class="ident">output</span>);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">essence</span> <span class="op">=</span> <span class="ident">RegularEssence</span>::<span class="ident">builder</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">essence</span> <span class="op">=</span> <span class="ident">RegularEssence::builder</span>();
         <span class="comment">// Order inputs and add them to the essence</span>
         <span class="ident">inputs_for_essence</span>.<span class="ident">sort_unstable_by_key</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">pack_new</span>());
         <span class="ident">essence</span> <span class="op">=</span> <span class="ident">essence</span>.<span class="ident">with_inputs</span>(<span class="ident">inputs_for_essence</span>);
@@ -1330,51 +1419,84 @@
 
         <span class="comment">// Add indexation_payload if index set</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">index</span>.<span class="ident">clone</span>() {
-            <span class="kw">let</span> <span class="ident">indexation_payload</span> <span class="op">=</span> <span class="ident">IndexationPayload</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>())<span class="question-mark">?</span>;
-            <span class="ident">essence</span> <span class="op">=</span> <span class="ident">essence</span>.<span class="ident">with_payload</span>(<span class="ident">Payload</span>::<span class="ident">Indexation</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">indexation_payload</span>)))
+            <span class="kw">let</span> <span class="ident">indexation_payload</span> <span class="op">=</span> <span class="ident">IndexationPayload::new</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>())<span class="question-mark">?</span>;
+            <span class="ident">essence</span> <span class="op">=</span> <span class="ident">essence</span>.<span class="ident">with_payload</span>(<span class="ident">Payload::Indexation</span>(<span class="ident">Box::new</span>(<span class="ident">indexation_payload</span>)))
         }
         <span class="kw">let</span> <span class="ident">regular_essence</span> <span class="op">=</span> <span class="ident">essence</span>.<span class="ident">finish</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">essence</span> <span class="op">=</span> <span class="ident">Essence</span>::<span class="ident">Regular</span>(<span class="ident">regular_essence</span>);
+        <span class="kw">let</span> <span class="ident">essence</span> <span class="op">=</span> <span class="ident">Essence::Regular</span>(<span class="ident">regular_essence</span>);
+
+        <span class="prelude-val">Ok</span>(<span class="ident">PreparedTransactionData</span> {
+            <span class="ident">essence</span>,
+            <span class="ident">address_index_recorders</span>,
+        })
+    }
+
+    <span class="doccomment">/// Sign the transaction</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">sign_transaction</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">prepared_transaction_data</span>: <span class="ident">PreparedTransactionData</span>,
+        <span class="ident">seed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Seed</span><span class="op">&gt;</span>,
+        <span class="ident">inputs_range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">essence</span> <span class="op">=</span> <span class="ident">prepared_transaction_data</span>.<span class="ident">essence</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">address_index_recorders</span> <span class="op">=</span> <span class="ident">prepared_transaction_data</span>.<span class="ident">address_index_recorders</span>;
         <span class="kw">let</span> <span class="ident">hashed_essence</span> <span class="op">=</span> <span class="ident">essence</span>.<span class="ident">hash</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unlock_blocks</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">signature_indexes</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unlock_blocks</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">signature_indexes</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span><span class="ident">::new</span>();
         <span class="ident">address_index_recorders</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">input</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">input</span>));
 
-        <span class="kw">for</span> (<span class="ident">current_block_index</span>, <span class="ident">recorder</span>) <span class="kw">in</span> <span class="ident">address_index_recorders</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">for</span> (<span class="ident">current_block_index</span>, <span class="kw-2">mut</span> <span class="ident">recorder</span>) <span class="kw">in</span> <span class="ident">address_index_recorders</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
+            <span class="comment">// If seed is provided we assume an essence that got prepared without seed and need to find the correct</span>
+            <span class="comment">// address indexes and public/internal</span>
+            <span class="kw">if</span> <span class="ident">seed</span>.<span class="ident">is_some</span>() {
+                <span class="kw">let</span> (<span class="ident">address_index</span>, <span class="ident">internal</span>) <span class="op">=</span> <span class="ident">search_address</span>(
+                    <span class="ident">seed</span>.<span class="ident">or</span>(<span class="self">self</span>.<span class="ident">seed</span>).<span class="ident">ok_or</span>(<span class="kw">crate</span><span class="ident">::Error::MissingParameter</span>(<span class="string">&quot;Seed&quot;</span>))<span class="question-mark">?</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">bech32_address</span>[<span class="number">0</span>..<span class="number">4</span>],
+                    <span class="ident">recorder</span>.<span class="ident">account_index</span>,
+                    <span class="ident">inputs_range</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">input_range</span>.<span class="ident">clone</span>()),
+                    <span class="kw-2">&amp;</span><span class="ident">Address::try_from_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">bech32_address</span>)<span class="question-mark">?</span>,
+                )
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="ident">recorder</span> <span class="op">=</span> <span class="ident">ClientMessageBuilder::create_address_index_recorder</span>(
+                    <span class="ident">recorder</span>.<span class="ident">account_index</span>,
+                    <span class="ident">address_index</span>,
+                    <span class="ident">internal</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">output</span>,
+                    <span class="ident">recorder</span>.<span class="ident">bech32_address</span>,
+                )<span class="question-mark">?</span>;
+            }
+
             <span class="comment">// Check if current path is same as previous path</span>
             <span class="comment">// If so, add a reference unlock block</span>
             <span class="comment">// Format to differentiate between public and internal addresses</span>
-            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">recorder</span>.<span class="ident">address_index</span>, <span class="ident">recorder</span>.<span class="ident">internal</span>);
+            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">recorder</span>.<span class="ident">address_index</span>, <span class="ident">recorder</span>.<span class="ident">internal</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">block_index</span>) <span class="op">=</span> <span class="ident">signature_indexes</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>) {
-                <span class="ident">unlock_blocks</span>.<span class="ident">push</span>(<span class="ident">UnlockBlock</span>::<span class="ident">Reference</span>(<span class="ident">ReferenceUnlock</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">block_index</span> <span class="kw">as</span> <span class="ident">u16</span>)<span class="question-mark">?</span>));
+                <span class="ident">unlock_blocks</span>.<span class="ident">push</span>(<span class="ident">UnlockBlock::Reference</span>(<span class="ident">ReferenceUnlock::new</span>(<span class="kw-2">*</span><span class="ident">block_index</span> <span class="kw">as</span> <span class="ident">u16</span>)<span class="question-mark">?</span>));
             } <span class="kw">else</span> {
                 <span class="comment">// If not, we need to create a signature unlock block</span>
-                <span class="kw">let</span> <span class="ident">private_key</span> <span class="op">=</span> <span class="self">self</span>
-                    .<span class="ident">seed</span>
-                    .<span class="ident">ok_or</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">MissingParameter</span>(<span class="string">&quot;Seed&quot;</span>))<span class="question-mark">?</span>
-                    .<span class="ident">derive</span>(<span class="ident">Curve</span>::<span class="ident">Ed25519</span>, <span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">chain</span>)<span class="question-mark">?</span>
+                <span class="kw">let</span> <span class="ident">private_key</span> <span class="op">=</span> <span class="ident">seed</span>
+                    .<span class="ident">or</span>(<span class="self">self</span>.<span class="ident">seed</span>)
+                    .<span class="ident">ok_or</span>(<span class="kw">crate</span><span class="ident">::Error::MissingParameter</span>(<span class="string">&quot;Seed&quot;</span>))<span class="question-mark">?</span>
+                    .<span class="ident">derive</span>(<span class="ident">Curve::Ed25519</span>, <span class="kw-2">&amp;</span><span class="ident">recorder</span>.<span class="ident">chain</span>)<span class="question-mark">?</span>
                     .<span class="ident">secret_key</span>()<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">public_key</span> <span class="op">=</span> <span class="ident">private_key</span>.<span class="ident">public_key</span>().<span class="ident">to_compressed_bytes</span>();
                 <span class="comment">// The signature unlock block needs to sign the hash of the entire transaction essence of the</span>
                 <span class="comment">// transaction payload</span>
-                <span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">private_key</span>.<span class="ident">sign</span>(<span class="kw-2">&amp;</span><span class="ident">hashed_essence</span>).<span class="ident">to_bytes</span>());
-                <span class="ident">unlock_blocks</span>.<span class="ident">push</span>(<span class="ident">UnlockBlock</span>::<span class="ident">Signature</span>(<span class="ident">SignatureUnlock</span>::<span class="ident">Ed25519</span>(<span class="ident">Ed25519Signature</span>::<span class="ident">new</span>(
+                <span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">private_key</span>.<span class="ident">sign</span>(<span class="kw-2">&amp;</span><span class="ident">hashed_essence</span>).<span class="ident">to_bytes</span>());
+                <span class="ident">unlock_blocks</span>.<span class="ident">push</span>(<span class="ident">UnlockBlock::Signature</span>(<span class="ident">SignatureUnlock::Ed25519</span>(<span class="ident">Ed25519Signature::new</span>(
                     <span class="ident">public_key</span>, <span class="kw-2">*</span><span class="ident">signature</span>,
                 ))));
                 <span class="ident">signature_indexes</span>.<span class="ident">insert</span>(<span class="ident">index</span>, <span class="ident">current_block_index</span>);
             }
         }
 
-        <span class="kw">let</span> <span class="ident">unlock_blocks</span> <span class="op">=</span> <span class="ident">UnlockBlocks</span>::<span class="ident">new</span>(<span class="ident">unlock_blocks</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">TransactionPayloadBuilder</span>::<span class="ident">new</span>()
+        <span class="kw">let</span> <span class="ident">unlock_blocks</span> <span class="op">=</span> <span class="ident">UnlockBlocks::new</span>(<span class="ident">unlock_blocks</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">TransactionPayloadBuilder::new</span>()
             .<span class="ident">with_essence</span>(<span class="ident">essence</span>)
             .<span class="ident">with_unlock_blocks</span>(<span class="ident">unlock_blocks</span>)
             .<span class="ident">finish</span>()
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">TransactionError</span>)<span class="question-mark">?</span>;
-        <span class="comment">// building message</span>
-        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload</span>::<span class="ident">Transaction</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">payload</span>));
-
-        <span class="self">self</span>.<span class="ident">finish_message</span>(<span class="prelude-val">Some</span>(<span class="ident">payload</span>)).<span class="kw">await</span>
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::TransactionError</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">Payload::Transaction</span>(<span class="ident">Box::new</span>(<span class="ident">payload</span>)))
     }
 
     <span class="doccomment">/// Consume the builder and get the API result</span>
@@ -1382,13 +1504,13 @@
         <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">Payload</span>;
         {
             <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">index</span>.<span class="ident">as_ref</span>();
-            <span class="kw">let</span> <span class="ident">empty_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="kw">let</span> <span class="ident">empty_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="macro">vec!</span>[];
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="ident">empty_slice</span>);
 
             <span class="comment">// build indexation</span>
-            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">IndexationPayload</span>::<span class="ident">new</span>(<span class="ident">index</span>.<span class="ident">expect</span>(<span class="string">&quot;No indexation tag&quot;</span>), <span class="ident">data</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">IndexationError</span>(<span class="ident">e</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
-            <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload</span>::<span class="ident">Indexation</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">index</span>));
+            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">IndexationPayload::new</span>(<span class="ident">index</span>.<span class="ident">expect</span>(<span class="string">&quot;No indexation tag&quot;</span>), <span class="ident">data</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::IndexationError</span>(<span class="ident">e</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
+            <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload::Indexation</span>(<span class="ident">Box::new</span>(<span class="ident">index</span>));
         }
 
         <span class="comment">// building message</span>
@@ -1405,25 +1527,25 @@
                 <span class="ident">parents</span>.<span class="ident">dedup</span>();
 
                 <span class="kw">let</span> <span class="ident">network_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_network_id</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span>::<span class="ident">new</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span><span class="ident">::new</span>();
                 <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_network_id</span>(<span class="ident">network_id</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span> <span class="ident">payload</span> {
                     <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_payload</span>(<span class="ident">p</span>);
                 }
                 <span class="ident">message</span>
-                    .<span class="ident">with_parents</span>(<span class="ident">Parents</span>::<span class="ident">new</span>(<span class="ident">parents</span>)<span class="question-mark">?</span>)
+                    .<span class="ident">with_parents</span>(<span class="ident">Parents::new</span>(<span class="ident">parents</span>)<span class="question-mark">?</span>)
                     .<span class="ident">finish</span>()
-                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">MessageError</span>)<span class="question-mark">?</span>
+                    .<span class="ident">map_err</span>(<span class="ident">Error::MessageError</span>)<span class="question-mark">?</span>
             }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">network_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_network_id</span>().<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">tips</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_tips</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span>::<span class="ident">new</span>();
-                <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_network_id</span>(<span class="ident">network_id</span>).<span class="ident">with_parents</span>(<span class="ident">Parents</span>::<span class="ident">new</span>(<span class="ident">tips</span>)<span class="question-mark">?</span>);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span><span class="ident">::new</span>();
+                <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_network_id</span>(<span class="ident">network_id</span>).<span class="ident">with_parents</span>(<span class="ident">Parents::new</span>(<span class="ident">tips</span>)<span class="question-mark">?</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span> <span class="ident">payload</span> {
                     <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_payload</span>(<span class="ident">p</span>);
                 }
-                <span class="ident">message</span>.<span class="ident">finish</span>().<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">MessageError</span>)<span class="question-mark">?</span>
+                <span class="ident">message</span>.<span class="ident">finish</span>().<span class="ident">map_err</span>(<span class="ident">Error::MessageError</span>)<span class="question-mark">?</span>
             }
         };
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>))]</span>
@@ -1436,7 +1558,7 @@
                 <span class="kw">let</span> <span class="ident">min_pow_score</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_min_pow_score</span>().<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">network_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_network_id</span>().<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="ident">do_pow</span>(
-                    <span class="kw">crate</span>::<span class="ident">client</span>::<span class="ident">ClientMinerBuilder</span>::<span class="ident">new</span>()
+                    <span class="kw">crate</span><span class="ident">::client::ClientMinerBuilder::new</span>()
                         .<span class="ident">with_local_pow</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_local_pow</span>().<span class="kw">await</span>)
                         .<span class="ident">finish</span>(),
                     <span class="ident">min_pow_score</span>,
@@ -1445,7 +1567,7 @@
                     <span class="ident">parents</span>,
                 )<span class="question-mark">?</span>
                 .<span class="number">1</span>
-                .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Pow</span>(<span class="string">&quot;final message pow failed.&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>
+                .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error::Pow</span>(<span class="string">&quot;final message pow failed.&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>
             }
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">finish_pow</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="ident">payload</span>).<span class="kw">await</span><span class="question-mark">?</span>,
         };
@@ -1462,9 +1584,9 @@
                         <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>);
                     }
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>))]</span>
-                    <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">time</span> <span class="op">*</span> <span class="number">50</span>)).<span class="kw">await</span>;
+                    <span class="ident">sleep</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">time</span> <span class="op">*</span> <span class="number">50</span>)).<span class="kw">await</span>;
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>)]</span>
-                    <span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">time</span> <span class="op">*</span> <span class="number">50</span>));
+                    <span class="ident">std::thread::sleep</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">time</span> <span class="op">*</span> <span class="number">50</span>));
                 }
                 <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_message</span>().<span class="ident">data</span>(<span class="kw-2">&amp;</span><span class="ident">msg_id</span>).<span class="kw">await</span>
             }
@@ -1503,7 +1625,7 @@
     {
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
     } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">address_data</span>.<span class="ident">dust_allowed</span> <span class="op">&amp;&amp;</span> <span class="ident">dust_outputs_amount</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">dust_allowance_balance</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DustError</span>(<span class="macro">format</span><span class="macro">!</span>(
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DustError</span>(<span class="macro">format!</span>(
             <span class="string">&quot;No dust output allowed on address {}&quot;</span>,
             <span class="ident">address</span>.<span class="ident">to_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">bech32_hrp</span>)
         )));
@@ -1514,11 +1636,11 @@
     <span class="kw">let</span> <span class="ident">address_outputs_metadata</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">find_outputs</span>(<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[<span class="ident">address</span>.<span class="ident">to_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">bech32_hrp</span>)]).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">for</span> <span class="ident">output_metadata</span> <span class="kw">in</span> <span class="ident">address_outputs_metadata</span> {
         <span class="kw">match</span> <span class="ident">output_metadata</span>.<span class="ident">output</span> {
-            <span class="ident">OutputDto</span>::<span class="ident">Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedDustAllowance</span>(<span class="ident">d_a_o</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">OutputDto::Treasury</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
+            <span class="ident">OutputDto::SignatureLockedDustAllowance</span>(<span class="ident">d_a_o</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">dust_allowance_balance</span> <span class="op">+</span><span class="op">=</span> <span class="ident">d_a_o</span>.<span class="ident">amount</span> <span class="kw">as</span> <span class="ident">i64</span>;
             }
-            <span class="ident">OutputDto</span>::<span class="ident">SignatureLockedSingle</span>(<span class="ident">s_o</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">OutputDto::SignatureLockedSingle</span>(<span class="ident">s_o</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="ident">s_o</span>.<span class="ident">amount</span> <span class="op">&lt;</span> <span class="ident">DUST_THRESHOLD</span> {
                     <span class="ident">dust_outputs_amount</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
@@ -1528,9 +1650,9 @@
 
     <span class="comment">// Here dust_allowance_balance and dust_outputs_amount should be as if this transaction gets confirmed</span>
     <span class="comment">// Max allowed dust outputs is 100</span>
-    <span class="kw">let</span> <span class="ident">allowed_dust_amount</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">dust_allowance_balance</span> <span class="op">/</span> <span class="ident">DUST_DIVISOR</span>, <span class="ident">MAX_ALLOWED_DUST_OUTPUTS</span>);
+    <span class="kw">let</span> <span class="ident">allowed_dust_amount</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="ident">dust_allowance_balance</span> <span class="op">/</span> <span class="ident">DUST_DIVISOR</span>, <span class="ident">MAX_ALLOWED_DUST_OUTPUTS</span>);
     <span class="kw">if</span> <span class="ident">dust_outputs_amount</span> <span class="op">&gt;</span> <span class="ident">allowed_dust_amount</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DustError</span>(<span class="macro">format</span><span class="macro">!</span>(
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DustError</span>(<span class="macro">format!</span>(
             <span class="string">&quot;No dust output allowed on address {}&quot;</span>,
             <span class="ident">address</span>.<span class="ident">to_bech32</span>(<span class="kw-2">&amp;</span><span class="ident">bech32_hrp</span>)
         )));
@@ -1546,14 +1668,14 @@
     <span class="kw">let</span> <span class="ident">tips_interval</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get_tips_interval</span>().<span class="kw">await</span>;
     <span class="kw">let</span> <span class="ident">network_id</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get_network_id</span>().<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">loop</span> {
-        <span class="kw">let</span> <span class="ident">cancel</span> <span class="op">=</span> <span class="ident">MinerCancel</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="ident">cancel</span> <span class="op">=</span> <span class="ident">MinerCancel::new</span>();
         <span class="kw">let</span> <span class="ident">cancel_2</span> <span class="op">=</span> <span class="ident">cancel</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">payload_</span> <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">parent_messages</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get_tips</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">time_thread</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="ident">pow_timeout</span>(<span class="ident">tips_interval</span>, <span class="ident">cancel</span>)));
-        <span class="kw">let</span> <span class="ident">pow_thread</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">time_thread</span> <span class="op">=</span> <span class="ident">std::thread::spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="ident">pow_timeout</span>(<span class="ident">tips_interval</span>, <span class="ident">cancel</span>)));
+        <span class="kw">let</span> <span class="ident">pow_thread</span> <span class="op">=</span> <span class="ident">std::thread::spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
             <span class="ident">do_pow</span>(
-                <span class="kw">crate</span>::<span class="ident">client</span>::<span class="ident">ClientMinerBuilder</span>::<span class="ident">new</span>()
+                <span class="kw">crate</span><span class="ident">::client::ClientMinerBuilder::new</span>()
                     .<span class="ident">with_local_pow</span>(<span class="ident">local_pow</span>)
                     .<span class="ident">with_cancel</span>(<span class="ident">cancel_2</span>)
                     .<span class="ident">finish</span>(),
@@ -1564,7 +1686,7 @@
             )
         });
 
-        <span class="kw">let</span> <span class="ident">threads</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">pow_thread</span>, <span class="ident">time_thread</span>];
+        <span class="kw">let</span> <span class="ident">threads</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">pow_thread</span>, <span class="ident">time_thread</span>];
         <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> <span class="ident">threads</span> {
             <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">join</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to join threads.&quot;</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="op">=</span><span class="op">&gt;</span> {
@@ -1585,7 +1707,7 @@
 <span class="comment">// PoW timeout, if we reach this we will restart the PoW with new tips, so the final message will never be lazy</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wasm&quot;</span>))]</span>
 <span class="kw">fn</span> <span class="ident">pow_timeout</span>(<span class="ident">after_seconds</span>: <span class="ident">u64</span>, <span class="ident">cancel</span>: <span class="ident">MinerCancel</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>) {
-    <span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="ident">after_seconds</span>));
+    <span class="ident">std::thread::sleep</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="ident">after_seconds</span>));
     <span class="ident">cancel</span>.<span class="ident">trigger</span>();
     (<span class="number">0</span>, <span class="prelude-val">None</span>)
 }
@@ -1598,18 +1720,18 @@
     <span class="ident">payload</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&gt;</span>,
     <span class="ident">parent_messages</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">MessageBuilder</span>::<span class="op">&lt;</span><span class="ident">ClientMiner</span><span class="op">&gt;</span><span class="ident">::new</span>();
     <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_network_id</span>(<span class="ident">network_id</span>);
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span> <span class="ident">payload</span> {
         <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">with_payload</span>(<span class="ident">p</span>);
     }
     <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>
-        .<span class="ident">with_parents</span>(<span class="ident">Parents</span>::<span class="ident">new</span>(<span class="ident">parent_messages</span>)<span class="question-mark">?</span>)
+        .<span class="ident">with_parents</span>(<span class="ident">Parents::new</span>(<span class="ident">parent_messages</span>)<span class="question-mark">?</span>)
         .<span class="ident">with_nonce_provider</span>(<span class="ident">client_miner</span>, <span class="ident">min_pow_score</span>)
         .<span class="ident">finish</span>()
-        .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">MessageError</span>)<span class="question-mark">?</span>;
+        .<span class="ident">map_err</span>(<span class="ident">Error::MessageError</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>((<span class="ident">message</span>.<span class="ident">nonce</span>(), <span class="prelude-val">Some</span>(<span class="ident">message</span>)))
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="iota_client" data-search-js="../../../search-index.js"></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="iota_client" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>
