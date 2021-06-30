@@ -245,7 +245,7 @@ Also for all the optional values, the default values are the same as the ones in
 <h4 id="get_included_message-message"><a class="header" href="#get_included_message-message">get_included_message(): Message</a></h4>
 <p>Get the included message of a transaction.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead><tbody>
-<tr><td>[index]</td><td><code>string</code></td><td>The id of the transaction</td></tr>
+<tr><td>[index]</td><td><code>str</code></td><td>The id of the transaction</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> the new <a href="#message">Message</a>.</p>
 <h3 id="high-level-apis"><a class="header" href="#high-level-apis">High-Level APIs</a></h3>
@@ -348,26 +348,33 @@ Also for all the optional values, the default values are the same as the ones in
 <h4 id="mnemonic_to_hex_seedmnemonic"><a class="header" href="#mnemonic_to_hex_seedmnemonic">mnemonic_to_hex_seed(mnemonic)</a></h4>
 <p>Returns the seed hex encoded.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td>mnemonic</td><td><code>string</code></td><td><code>undefined</code></td><td>Bip39 mnemonic with words from the English word list.</td></tr>
+<tr><td>mnemonic</td><td><code>str</code></td><td><code>undefined</code></td><td>Bip39 mnemonic with words from the English word list.</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> A String</p>
+<h4 id="find_inputsaddresses-amount-u64"><a class="header" href="#find_inputsaddresses-amount-u64">find_inputs(addresses, amount: u64)</a></h4>
+<p>Return the inputs from addresses for a provided amount (useful for offline signing)</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>addresses</td><td><code>list[str]</code></td><td><code>undefined</code></td><td>The input address list.</td></tr>
+<tr><td>amount</td><td><code>str</code></td><td><code>undefined</code></td><td>The input amount.</td></tr>
+</tbody></table>
+<p><strong>Returns</strong> The list of <a href="#utxoinput">UtxoInput</a>.</p>
 <h4 id="bech32_to_hexbech32"><a class="header" href="#bech32_to_hexbech32">bech32_to_hex(bech32)</a></h4>
 <p>Returns a parsed hex String from bech32.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td>bech32</td><td><code>string</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
+<tr><td>bech32</td><td><code>str</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> A String</p>
 <h4 id="hex_to_bech32hex-bech32_hrp-optional"><a class="header" href="#hex_to_bech32hex-bech32_hrp-optional">hex_to_bech32(hex, bech32_hrp (optional))</a></h4>
 <p>Returns a parsed bech32 String from hex.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td>bech32</td><td><code>string</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
-<tr><td>bech32_hrp</td><td><code>string</code></td><td><code>undefined</code></td><td>The Bech32 hrp string</td></tr>
+<tr><td>bech32</td><td><code>str</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
+<tr><td>bech32_hrp</td><td><code>str</code></td><td><code>undefined</code></td><td>The Bech32 hrp string</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> A String</p>
 <h4 id="is_address_validaddress-bool"><a class="header" href="#is_address_validaddress-bool">is_address_valid(address): bool</a></h4>
 <p>Checks if a given address is valid.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td>address</td><td><code>string</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
+<tr><td>address</td><td><code>str</code></td><td><code>undefined</code></td><td>The address Bech32 string</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> A boolean.</p>
 <h4 id="retrymessage_id-str-message"><a class="header" href="#retrymessage_id-str-message">retry(message_id): (str, Message)</a></h4>
@@ -387,7 +394,7 @@ Also for all the optional values, the default values are the same as the ones in
 <h4 id="consolidate_fundsseed-account_index-start_index-end_index-str"><a class="header" href="#consolidate_fundsseed-account_index-start_index-end_index-str">consolidate_funds(seed, account_index, start_index, end_index): str</a></h4>
 <p>Function to consolidate all funds from a range of addresses to the address with the lowest index in that range</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead><tbody>
-<tr><td>[seed]</td><td><code>string</code></td><td>The seed</td></tr>
+<tr><td>[seed]</td><td><code>str</code></td><td>The seed</td></tr>
 <tr><td>[account_index]</td><td><code>int</code></td><td>The account index.</td></tr>
 <tr><td>[start_index]</td><td><code>int</code></td><td>The lowest address index, funds will be consolidated to this address.</td></tr>
 <tr><td>[end_index]</td><td><code>int</code></td><td>The address index until which funds will be consolidated</td></tr>
