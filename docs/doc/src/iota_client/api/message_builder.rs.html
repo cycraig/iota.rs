@@ -866,6 +866,13 @@
 <span id="863">863</span>
 <span id="864">864</span>
 <span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2021 IOTA Stiftung</span>
 <span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
@@ -908,13 +915,20 @@
 <span class="doccomment">/// Structure for sorting of UnlockBlocks</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AddressIndexRecorder</span> {
-    <span class="ident">account_index</span>: <span class="ident">usize</span>,
-    <span class="ident">input</span>: <span class="ident">Input</span>,
-    <span class="ident">output</span>: <span class="ident">OutputResponse</span>,
-    <span class="ident">address_index</span>: <span class="ident">usize</span>,
-    <span class="ident">chain</span>: <span class="ident">Chain</span>,
-    <span class="ident">internal</span>: <span class="ident">bool</span>,
-    <span class="ident">bech32_address</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Index of the account</span>
+    <span class="kw">pub</span> <span class="ident">account_index</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// The input used</span>
+    <span class="kw">pub</span> <span class="ident">input</span>: <span class="ident">Input</span>,
+    <span class="doccomment">/// The output information</span>
+    <span class="kw">pub</span> <span class="ident">output</span>: <span class="ident">OutputResponse</span>,
+    <span class="doccomment">/// index of this address on the seed</span>
+    <span class="kw">pub</span> <span class="ident">address_index</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// The chain derived from seed</span>
+    <span class="kw">pub</span> <span class="ident">chain</span>: <span class="ident">Chain</span>,
+    <span class="doccomment">/// Whether this is an internal address</span>
+    <span class="kw">pub</span> <span class="ident">internal</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// The address</span>
+    <span class="kw">pub</span> <span class="ident">bech32_address</span>: <span class="ident">String</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
