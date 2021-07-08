@@ -266,8 +266,36 @@ Also for all the optional values, the default values are the same as the ones in
 <tr><td>[data_str]</td><td><code>str</code></td><td><code>undefined</code></td><td>The data string</td></tr>
 <tr><td>[parents]</td><td><code>list[str]</code></td><td><code>undefined</code></td><td>The message ids of the parents</td></tr>
 </tbody></table>
-<p><strong>Returns</strong> the built <a href="#message">Message</a>.</p>
+<h4 id="get_output_amount_and_addressoutput-int-addressdto-bool"><a class="header" href="#get_output_amount_and_addressoutput-int-addressdto-bool">get_output_amount_and_address(output): (int, AddressDto, bool)</a></h4>
+<p>Get the output amount and address from the provided OutputDto.</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>[output]</td><td><code>OutputDto</code></td><td><code>undefined</code></td><td>The outputs where we want to send them tokens</td></tr>
+</tbody></table>
+<p><strong>Returns</strong> the tuple of (the amount of tokens, the address, the indicator of the output type: <code>true</code> for <code>SignatureLockedSingle</code>, <code>false</code> for <code>SignatureLockedDustAllowance</code>).</p>
+<h4 id="prepare_transactioninputs-outputs-preparedtransactiondata"><a class="header" href="#prepare_transactioninputs-outputs-preparedtransactiondata">prepare_transaction(inputs, outputs): PreparedTransactionData</a></h4>
+<p>Prepare a transaction.</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>[inputs]</td><td><code>list[UtxoInput]</code></td><td><code>undefined</code></td><td>The UTXOInputs where we want to send tokens from</td></tr>
+<tr><td>[outputs]</td><td><code>list[Output]</code></td><td><code>undefined</code></td><td>The outputs where we want to send them tokens</td></tr>
+</tbody></table>
+<p><strong>Returns</strong> the prepared transaction data.</p>
+<h4 id="sign_transactionprepared_transaction_data-seed-start_index-end_index-payload"><a class="header" href="#sign_transactionprepared_transaction_data-seed-start_index-end_index-payload">sign_transaction(prepared_transaction_data, seed, start_index, end_index): Payload</a></h4>
+<p>Sign the transaction.</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>[prepared_transaction_data]</td><td><code>PreparedTransactionData</code></td><td><code>undefined</code></td><td>The prepared transaction data</td></tr>
+<tr><td>[seed]</td><td><code>str</code></td><td><code>undefined</code></td><td>The seed</td></tr>
+<tr><td>[start_index]</td><td><code>int</code></td><td><code>undefined</code></td><td>The start address index</td></tr>
+<tr><td>[end_index]</td><td><code>int</code></td><td><code>undefined</code></td><td>The end address index (excluded)</td></tr>
+</tbody></table>
+<p><strong>Returns</strong> the <a href="#payload">Payload</a>.</p>
+<h4 id="finish_messagepayload-message"><a class="header" href="#finish_messagepayload-message">finish_message(payload): Message</a></h4>
+<p>Construct the message by payload.</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>[payload]</td><td><code>Payload</code></td><td><code>undefined</code></td><td>The <a href="#payload">Payload</a></td></tr>
+</tbody></table>
+<p><strong>Returns</strong> the <a href="#message">Message</a>.</p>
 <h4 id="get_message_metadatamessage_id-messagemetadataresponse"><a class="header" href="#get_message_metadatamessage_id-messagemetadataresponse">get_message_metadata(message_id): MessageMetadataResponse</a></h4>
+<p>Get the message metadata by message_id.</p>
 <table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td>[message_id]</td><td><code>str</code></td><td><code>undefined</code></td><td>The message id</td></tr>
 </tbody></table>
@@ -324,6 +352,7 @@ Also for all the optional values, the default values are the same as the ones in
 <tr><td>[account_index]</td><td><code>int</code></td><td><code>undefined</code></td><td>The account index</td></tr>
 <tr><td>[input_range_begin]</td><td><code>int</code></td><td><code>undefined</code></td><td>The begin of the address range</td></tr>
 <tr><td>[input_range_end]</td><td><code>int</code></td><td><code>undefined</code></td><td>The end of the address range</td></tr>
+<tr><td>[bech32_hrp]</td><td><code>string</code></td><td><code>undefined</code></td><td>The Bech32 HRP</td></tr>
 <tr><td>[get_all]</td><td><code>bool</code></td><td><code>undefined</code></td><td>Get all addresses</td></tr>
 </tbody></table>
 <p><strong>Returns</strong> a list of tuples with type of <code>(str, int)</code> as the address and corresponding index in the account.</p>
@@ -573,6 +602,9 @@ Also for all the optional values, the default values are the same as the ones in
     'transaction': list[Transaction], # (optional)
     'milestone': list[Milestone], # (optional)
     'indexation': list[Indexation], # (optional)
+    'receipt': List[Receipt], # (optional)
+    'treasury_transaction': List[TreasuryTransaction], # (optional)
+
 }
 </code></pre>
 <p>Please refer to <a href="#transaction">Transaction</a>, <a href="#milestone">Milestone</a>, and <a href="#indexation">Indexation</a> for the details of these types.</p>
