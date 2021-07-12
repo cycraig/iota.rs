@@ -592,10 +592,7 @@ async fn main() -&gt; Result&lt;()&gt; {
     });
 
     iota.subscriber()
-        .with_topics(vec![
-            Topic::new(&quot;milestones/latest&quot;).unwrap(),
-            Topic::new(&quot;messages&quot;).unwrap(),
-        ])
+        .with_topics(vec![Topic::new(&quot;milestones/latest&quot;)?, Topic::new(&quot;messages&quot;)?])
         .subscribe(move |event| {
             match event.topic.as_str() {
                 &quot;messages&quot; =&gt; {
@@ -610,13 +607,20 @@ async fn main() -&gt; Result&lt;()&gt; {
         .await
         .unwrap();
 
-    for _ in 0..10 {
+    for i in 0..10 {
         rx.recv().unwrap();
+        if i == 7 {
+            // unsubscribe from topic &quot;messages&quot;, will continue to receive events for &quot;milestones/latest&quot;
+            iota.subscriber()
+                .with_topics(vec![Topic::new(&quot;messages&quot;)?])
+                .unsubscribe()
+                .await?;
+        }
     }
 
-    iota.subscriber().disconnect().await.unwrap();
+    iota.subscriber().disconnect().await?;
     // alternatively
-    // iota.subscriber().unsubscribe().unwrap();
+    // iota.subscriber().unsubscribe().await?;
     Ok(())
 }
 </code></pre></pre>
@@ -1283,7 +1287,13 @@ That's why we sent 1Mi in the given example to comply with the protection.&quot;
 
     client.subscriber().topics(['milestones/confirmed', 'messages']).subscribe((err, data) =&gt; {
         console.log(data);
-        // To get the message id `client.getMessageId(data.payload)` can be used
+        // To get the message id from messages `client.getMessageId(data.payload)` can be used
+    })
+
+    await new Promise(resolve =&gt; setTimeout(resolve, 1500));
+    // unsubscribe from 'messages' topic, will continue to receive events for 'milestones/confirmed'
+    client.subscriber().topics(['messages']).unsubscribe((err, data) =&gt; {
+        console.log(data);
     })
 }
 
@@ -3003,6 +3013,11 @@ Also for all the optional values, the default values are the same as the ones in
 </tbody></table>
 <h4 id="unsubscribe-void"><a class="header" href="#unsubscribe-void">unsubscribe(): void</a></h4>
 <p>Unsubscribe all topics.</p>
+<h4 id="unsubscribe_topicstopics-void"><a class="header" href="#unsubscribe_topicstopics-void">unsubscribe_topics(topics): void</a></h4>
+<p>Unsubscribe from provided topics.</p>
+<table><thead><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>[topics]</td><td><code>list[str]</code></td><td><code>undefined</code></td><td>The MQTT topics</td></tr>
+</tbody></table>
 <h4 id="disconnect-void"><a class="header" href="#disconnect-void">disconnect(): void</a></h4>
 <p>Disconnect the mqtt broker.</p>
 <h4 id="walletaddress"><a class="header" href="#walletaddress">WalletAddress</a></h4>

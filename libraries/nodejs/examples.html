@@ -783,7 +783,13 @@ That's why we sent 1Mi in the given example to comply with the protection.&quot;
 
     client.subscriber().topics(['milestones/confirmed', 'messages']).subscribe((err, data) =&gt; {
         console.log(data);
-        // To get the message id `client.getMessageId(data.payload)` can be used
+        // To get the message id from messages `client.getMessageId(data.payload)` can be used
+    })
+
+    await new Promise(resolve =&gt; setTimeout(resolve, 1500));
+    // unsubscribe from 'messages' topic, will continue to receive events for 'milestones/confirmed'
+    client.subscriber().topics(['messages']).unsubscribe((err, data) =&gt; {
+        console.log(data);
     })
 }
 

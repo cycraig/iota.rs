@@ -482,10 +482,7 @@ async fn main() -&gt; Result&lt;()&gt; {
     });
 
     iota.subscriber()
-        .with_topics(vec![
-            Topic::new(&quot;milestones/latest&quot;).unwrap(),
-            Topic::new(&quot;messages&quot;).unwrap(),
-        ])
+        .with_topics(vec![Topic::new(&quot;milestones/latest&quot;)?, Topic::new(&quot;messages&quot;)?])
         .subscribe(move |event| {
             match event.topic.as_str() {
                 &quot;messages&quot; =&gt; {
@@ -500,13 +497,20 @@ async fn main() -&gt; Result&lt;()&gt; {
         .await
         .unwrap();
 
-    for _ in 0..10 {
+    for i in 0..10 {
         rx.recv().unwrap();
+        if i == 7 {
+            // unsubscribe from topic &quot;messages&quot;, will continue to receive events for &quot;milestones/latest&quot;
+            iota.subscriber()
+                .with_topics(vec![Topic::new(&quot;messages&quot;)?])
+                .unsubscribe()
+                .await?;
+        }
     }
 
-    iota.subscriber().disconnect().await.unwrap();
+    iota.subscriber().disconnect().await?;
     // alternatively
-    // iota.subscriber().unsubscribe().unwrap();
+    // iota.subscriber().unsubscribe().await?;
     Ok(())
 }
 </code></pre></pre>
