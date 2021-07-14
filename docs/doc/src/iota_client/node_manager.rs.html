@@ -1299,7 +1299,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">post_json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident">Node</span>, <span class="ident">_timeout</span>: <span class="ident">Duration</span>, <span class="ident">json</span>: <span class="ident">Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request_builder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">node</span>.<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request_builder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">node</span>.<span class="ident">url</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">jwt</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">jwt</span> {
             <span class="ident">request_builder</span> <span class="op">=</span> <span class="ident">request_builder</span>.<span class="ident">bearer_auth</span>(<span class="ident">jwt</span>);
         }
