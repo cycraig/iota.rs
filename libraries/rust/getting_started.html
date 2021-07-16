@@ -156,6 +156,8 @@
 <p>Using the library is easy, just add it as dependency in your <code>Cargo.toml</code>:</p>
 <pre><code class="language-bash">[dependencies]
 iota-client = { git = &quot;https://github.com/iotaledger/iota.rs&quot;, branch = &quot;dev&quot; }
+# asynchronous runtime
+tokio = { version = &quot;1.5&quot;, features = [&quot;full&quot;] }
 </code></pre>
 <p>And then you can use the library in your code with <code>use iota_client;</code>.</p>
 <h3 id="initialisation"><a class="header" href="#initialisation">Initialisation</a></h3>
