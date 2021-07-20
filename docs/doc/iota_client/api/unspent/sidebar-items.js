@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["GetUnspentAddressBuilder","Builder of get_unspent_address API"]]});

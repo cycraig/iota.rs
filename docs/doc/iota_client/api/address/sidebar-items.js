@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["generate_address",""],["search_address","Function to find the index and public or internal type of an Bech32 encoded address"]],"struct":[["GetAddressesBuilder","Builder of get_addresses API"]]});

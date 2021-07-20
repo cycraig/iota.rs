@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["GetMessageBuilder","Builder of GET /api/v1/messages/{messageId} endpoint"]]});
